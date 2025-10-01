@@ -24,7 +24,7 @@ public class DaoCheval {
         try {
             requeteSql = cnx.prepareStatement(
                 "SELECT c.id as c_id, c.nom as c_nom, " +
-                "r.id as r_id, r.nom as r_nom " +
+                "r.id as r_id, r.libelle as r_libelle " +
                 "FROM cheval c " +
                 "INNER JOIN race r ON c.race_id = r.id"
             );
@@ -35,7 +35,7 @@ public class DaoCheval {
                 c.setNom(resultatRequete.getString("c_nom"));
                 Race r = new Race();
                 r.setId(resultatRequete.getInt("r_id"));
-                r.setNom(resultatRequete.getString("r_nom"));
+                r.setLibelle(resultatRequete.getString("r_libelle"));
                 c.setRace(r);
                 lesChevaux.add(c);
             }
@@ -57,7 +57,7 @@ public class DaoCheval {
         try {
             requeteSql = cnx.prepareStatement(
                 "SELECT c.id as c_id, c.nom as c_nom, " +
-                "r.id as r_id, r.nom as r_nom " +
+                "r.id as r_id, r.libelle as r_libelle " +
                 "FROM cheval c " +
                 "INNER JOIN race r ON c.race_id = r.id " +
                 "WHERE c.id = ?"
@@ -70,7 +70,7 @@ public class DaoCheval {
                 cheval.setNom(resultatRequete.getString("c_nom"));
                 Race race = new Race();
                 race.setId(resultatRequete.getInt("r_id"));
-                race.setNom(resultatRequete.getString("r_nom"));
+                race.setLibelle(resultatRequete.getString("r_libelle"));
                 cheval.setRace(race);
             }
         } catch (SQLException e) {

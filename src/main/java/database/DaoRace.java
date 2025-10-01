@@ -20,13 +20,13 @@ public class DaoRace {
         ArrayList<Race> lesRaces = new ArrayList<Race>();
         try {
             requeteSql = cnx.prepareStatement(
-                "SELECT id, nom FROM race ORDER BY nom"
+                "SELECT id, libelle FROM race ORDER BY libelle"
             );
             resultatRequete = requeteSql.executeQuery();
             while (resultatRequete.next()) {
                 Race race = new Race();
                 race.setId(resultatRequete.getInt("id"));
-                race.setNom(resultatRequete.getString("nom"));
+                race.setLibelle(resultatRequete.getString("libelle"));
                 lesRaces.add(race);
             }
         } catch (SQLException e) {
@@ -46,14 +46,14 @@ public class DaoRace {
         Race race = null;
         try {
             requeteSql = cnx.prepareStatement(
-                "SELECT id, nom FROM race WHERE id = ?"
+                "SELECT id, libelle FROM race WHERE id = ?"
             );
             requeteSql.setInt(1, id);
             resultatRequete = requeteSql.executeQuery();
             if (resultatRequete.next()) {
                 race = new Race();
                 race.setId(resultatRequete.getInt("id"));
-                race.setNom(resultatRequete.getString("nom"));
+                race.setLibelle(resultatRequete.getString("libelle"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

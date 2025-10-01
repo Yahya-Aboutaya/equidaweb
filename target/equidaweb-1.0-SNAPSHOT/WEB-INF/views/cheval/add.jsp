@@ -72,7 +72,7 @@
                                            if (lesRaces != null) {
                                                for(Race race : lesRaces) { %>
                                                    <option value="<%= race.getId() %>">
-                                                       <%= race.getNom() %>
+                                                       <%= race.getLibelle() %>
                                                    </option>
                                         <% }} %>
                                     </select>

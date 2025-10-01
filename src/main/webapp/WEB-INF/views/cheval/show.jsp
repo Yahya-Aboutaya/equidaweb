@@ -77,7 +77,7 @@
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Race</div>
                                 <div class="col-sm-9 detail-value">
-                                    <%= leCheval.getRace() != null ? leCheval.getRace().getNom() : "Non renseignée" %>
+                                    <%= leCheval.getRace() != null ? leCheval.getRace().getLibelle() : "Non renseignée" %>
                                 </div>
                             </div>
 

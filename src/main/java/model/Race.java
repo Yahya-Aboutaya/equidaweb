@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Race {
 
     private int id;
-    private String nom;
+    private String libelle;
 
     private ArrayList<Cheval> lesChevaux ;
 
@@ -17,12 +17,15 @@ public class Race {
     public void setId(int id) {
         this.id = id;
     }
-    public String getNom() {
-        return nom;
+
+    public String getLibelle() {
+        return libelle;
     }
-    public void setNom(String nom) {
-        this.nom = nom;
+
+    public void setLibelle(String libelle) {
+        this.libelle = libelle;
     }
+
 
     public ArrayList<Cheval> getLesChevaux() {
         return lesChevaux;
