@@ -61,7 +61,7 @@
                             <tr>
                                 <td><%= c.getId() %></td>
                                 <td><a href="<%= request.getContextPath() %>/cheval-servlet/show?idCheval=<%= c.getId() %>"><%= c.getNom() %></a></td>
-                                <td><%= c.getRace().getNom() %></td>
+                                <td><%= c.getRace().getLibelle() %></td>
                             </tr>
                         <% } %>
                     </tbody>

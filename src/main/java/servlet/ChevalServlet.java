@@ -38,6 +38,7 @@ public class ChevalServlet extends HttpServlet {
         System.out.println("PathInfo: " + path);
 
         if ("/list".equals(path)) {
+            System.out.println("DANS SERVLET CHEVAL LIST");
             ArrayList<Cheval> lesChevaux = DaoCheval.getLesChevaux(cnx);
             request.setAttribute("pLesChevaux", lesChevaux);
             this.getServletContext().getRequestDispatcher("/WEB-INF/views/cheval/list.jsp").forward(request, response);

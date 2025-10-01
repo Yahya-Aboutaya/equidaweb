@@ -9,7 +9,7 @@ public class TestRace
         // instantiation d'une race
         Race r = new Race();
         r.setId(4);
-        r.setNom("Andalou");
+        r.setLibelle("Andalou");
 
         // instanciation de 2 chevaux c1 et c2
         // ajout des chevaux c1 et c2 à l'arraylist des chevaux grâce
@@ -25,7 +25,7 @@ public class TestRace
         r.addCheval(c2);
 
         //Affichage des informations de la race
-        System.out.println("La race est " + r.getId() + " " + r.getNom() + " et contient " + r.getLesChevaux().size() + " chevaux" );
+        System.out.println("La race est " + r.getId() + " " + r.getLibelle() + " et contient " + r.getLesChevaux().size() + " chevaux" );
         System.out.println("Liste des chevaux de la race : ");
 
 		// Affichage des informations sur chevaux liées à la race
