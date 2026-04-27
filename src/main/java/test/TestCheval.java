@@ -20,28 +20,30 @@ public class TestCheval {
         //affectation de  la race au cheval grâce à la relation ManyToOne
         c.setRace(r);
         
-        // Création de 2 parents
-        Cheval parent1 = new Cheval();
+// Création de 2 parents
+        Cheval parent1 = new Cheval(); // La mère
         parent1.setId(10);
         parent1.setNom("Lightning");
         parent1.setSexe("F");
 
-        Cheval parent2 = new Cheval();
+        Cheval parent2 = new Cheval(); // Le père
         parent2.setId(11);
         parent2.setNom("Thunder");
         parent2.setSexe("M");
 
-        
-        //c.addParent(parent1);
-        //c.addParent(parent2);
-
+        // Affectation précise au lieu de l'ancienne liste
+        c.setMere(parent1);
+        c.setPere(parent2);
 
         System.out.println("Cheval : " + c.getId() + " " + c.getNom() + " "
                 + c.getRace().getId() + " " + c.getRace().getLibelle());
-        System.out.println("Parents : ");
-        for (Cheval p : c.getParents()) {
-            System.out.println(" - " + p.getId() + " " + p.getNom() + " " + p.getSexe());
-        }
         
+        System.out.println("Généalogie : ");
+        if (c.getPere() != null) {
+            System.out.println(" - Père : " + c.getPere().getId() + " " + c.getPere().getNom());
+        }
+        if (c.getMere() != null) {
+            System.out.println(" - Mère : " + c.getMere().getId() + " " + c.getMere().getNom());
+        }
     }
 }
