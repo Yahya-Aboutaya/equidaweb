@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -115,10 +116,14 @@ public class VenteServlet extends HttpServlet {
             }
         }
         if ("/add".equals(path)) {
-            //ArrayList<Lieu> lesLieux = DaoVente.getLesLieux(cnx);
-            //request.setAttribute("pLesLieux", lesLieux);
-            //this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);
-        
+            // 1. On va chercher les lieux pour remplir la liste déroulante du formulaire
+            ArrayList<Lieu> lesLieux = DaoVente.getLesLieux(cnx);
+
+            // 2. On les donne à la JSP
+            request.setAttribute("pLesLieux", lesLieux);
+
+            // 3. On affiche enfin la page
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);   
         }
         
         
@@ -134,27 +139,40 @@ public class VenteServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-        String path = request.getPathInfo();
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    
+    
+    String path = request.getPathInfo();
+    
+    if ("/add".equals(path)) {
         
-      //  if ("/ad".equals(path)) {
-        //    try {
-           //     String nom =request.getParameter("nom");
-              //  String dateDebutVente = request.getParameter("dateDebut")
-           // }
+        String nom = request.getParameter("nom");
+        String dateDebut = request.getParameter("dateDebutVente");
+        int idLieu = Integer.parseInt(request.getParameter("lieu"));
+
+        Vente uneVente = new Vente();
+        uneVente.setNom(nom);
+        // On convertit le texte reçu du formulaire en véritable date Java
+        LocalDate laDate = LocalDate.parse(dateDebut);
+        // On donne cette date à l'objet vente
+        uneVente.setDateDebutVente(laDate);
+        
+        Lieu leLieu = new Lieu();
+        leLieu.setId(idLieu);
+        uneVente.setLieu(leLieu);
+
+        boolean ok = DaoVente.ajouterVente(cnx, uneVente);
+
+        if (ok) {
+            // Si c'est bon, on retourne à la liste
+            response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
+        } else {
+            // Sinon on réaffiche le formulaire avec un message d'erreur
+            request.setAttribute("message", "Erreur lors de l'enregistrement");
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);
         }
-   }
+    }
+}
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-   // @Override
-   // public String getServletInfo() {
-       // return "Short description";
-   // }// </editor-fold>
-
-//}
+}
