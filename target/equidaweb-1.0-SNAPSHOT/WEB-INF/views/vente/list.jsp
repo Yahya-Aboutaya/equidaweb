@@ -34,15 +34,7 @@
         
     </head>
     <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <a href='../VenteServlet/list' class="navbar-brand">
-                        Système de gestion des ventes aux enchères de chevaux
-                    </a>
-                </div>
-            </div>
-        </nav>
+        <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
         
         <div class="container special">
             <div class="header-actions">
