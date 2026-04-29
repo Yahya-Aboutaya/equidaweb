@@ -1,4 +1,3 @@
-<%-- navbar.jsp : à inclure dans chaque JSP avec <%@ include file="/WEB-INF/views/common/navbar.jsp" %> --%>
 <style>
     .eq-nav {
         background: #2c1a0e;
@@ -48,11 +47,14 @@
 
 <nav class="eq-nav">
     <a class="eq-brand" href="<%= request.getContextPath() %>/index.jsp">EQU<span>IDA</span></a>
-    <a href="<%= request.getContextPath() %>/cheval-servlet/list">? Chevaux</a>
+    <a href="<%= request.getContextPath() %>/cheval-servlet/list">Chevaux</a>
     <a href="<%= request.getContextPath() %>/cheval-servlet/add">+ Cheval</a>
     <div class="eq-sep"></div>
     <a href="<%= request.getContextPath() %>/vente-servlet/list">Ventes</a>
     <a href="<%= request.getContextPath() %>/vente-servlet/add">+ Vente</a>
-    <div class="eq-spacer"></div>
-    <a href="<%= request.getContextPath() %>/index.jsp">? Accueil</a>
+    <div class="eq-sep"></div>
+    <a href="<%= request.getContextPath() %>/course-servlet/list">Courses</a>
+    <a href="<%= request.getContextPath() %>/course-servlet/add">+ Course</a>
+    <div class="eq-sep"></div>
+    <a href="<%= request.getContextPath() %>/index.jsp">Accueil</a>
 </nav>
