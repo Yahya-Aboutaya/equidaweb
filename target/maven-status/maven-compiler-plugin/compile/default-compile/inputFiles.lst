@@ -1,6 +1,7 @@
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\database\DaoVente.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\model\Race.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\model\Lot.java
+E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\servlet\CourseServlet.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\test\TestCheval.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\model\Vendeur.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\test\TestVente.java
@@ -15,6 +16,7 @@ E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\sr
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\test\TestRace.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\database\DaoRace.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\model\Pays.java
+E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\database\DaoCourse.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\model\Lieu.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\database\DaoCheval.java
 E:\SIO2\BLOC2\SLAM\B2.2-ANNOUCHE\projet Equida\DATA.ELEVE\equidaweb25Netbeans\src\main\java\test\TestConnexionBdd.java
