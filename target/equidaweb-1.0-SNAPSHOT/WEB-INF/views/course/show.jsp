@@ -25,20 +25,13 @@
             .detail-row { margin-bottom: 15px; }
             .detail-label { font-weight: bold; color: #555; }
             .detail-value { padding-top: 7px; }
-            .header-actions {
-                margin-bottom: 20px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
+            .header-actions { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         </style>
     </head>
     <body>
         <%@ include file="/WEB-INF/views/common/navbar.jsp" %>
 
-        <%
-            Course laCourse = (Course) request.getAttribute("pLaCourse");
-        %>
+        <% Course laCourse = (Course) request.getAttribute("pLaCourse"); %>
 
         <div class="container special">
             <div class="row">
@@ -52,19 +45,16 @@
                                 <div class="col-sm-3 detail-label">Identifiant</div>
                                 <div class="col-sm-9 detail-value"><%= laCourse.getId() %></div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Nom</div>
                                 <div class="col-sm-9 detail-value"><%= laCourse.getNom() %></div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Lieu</div>
                                 <div class="col-sm-9 detail-value">
                                     <%= laCourse.getLieu() != null ? laCourse.getLieu() : "Non renseigné" %>
                                 </div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Date</div>
                                 <div class="col-sm-9 detail-value">
@@ -74,6 +64,9 @@
 
                             <div class="row" style="margin-top: 20px;">
                                 <div class="col-sm-offset-3 col-sm-9">
+                                    <a href="<%= request.getContextPath() %>/course-servlet/edit?idCourse=<%= laCourse.getId() %>" class="btn btn-warning">
+                                        <span class="glyphicon glyphicon-pencil"></span> Modifier
+                                    </a>
                                     <a href="<%= request.getContextPath() %>/course-servlet/list" class="btn btn-default">
                                         <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
                                     </a>
@@ -81,9 +74,7 @@
                             </div>
                         <% } else { %>
                             <div class="alert alert-danger">La course demandée n'existe pas.</div>
-                            <a href="<%= request.getContextPath() %>/course-servlet/list" class="btn btn-default">
-                                <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
-                            </a>
+                            <a href="<%= request.getContextPath() %>/course-servlet/list" class="btn btn-default">Retour</a>
                         <% } %>
                     </div>
                 </div>
@@ -96,7 +87,6 @@
             <div class="header-actions">
                 <h2>Chevaux participants</h2>
             </div>
-
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
@@ -118,15 +108,11 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <% if (cc.getPosition() != 0) { %>
-                                        <%= cc.getPosition() %>
-                                    <% } else { %>
-                                        <em>Non classé</em>
-                                    <% } %>
+                                    <% if (cc.getPosition() != 0) { %><%= cc.getPosition() %>
+                                    <% } else { %><em>Non classé</em><% } %>
                                 </td>
                             </tr>
-                        <%  }
-                            } else { %>
+                        <% } } else { %>
                             <tr>
                                 <td colspan="2" class="text-center text-muted">Aucun participant enregistré</td>
                             </tr>

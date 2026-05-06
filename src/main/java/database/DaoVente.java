@@ -47,7 +47,7 @@ public class DaoVente {
         Vente v = null;
         try {
             requeteSql = cnx.prepareStatement(
-                "SELECT v.id as v_id, v.nom as v_nom, " +
+                "SELECT v.id as v_id, v.nom as v_nom, v.dateDebutVente as v_date, " +
                 "l.id as l_id, l.ville as l_ville " +
                 "FROM vente v " +
                 "INNER JOIN lieu l ON v.idLieu = l.id " +
@@ -55,10 +55,18 @@ public class DaoVente {
             );
             requeteSql.setInt(1, idVente);
             resultatRequete = requeteSql.executeQuery();
-            while (resultatRequete.next()) {
+            if (resultatRequete.next()) {
                 v = new Vente();
                 v.setId(resultatRequete.getInt("v_id"));
                 v.setNom(resultatRequete.getString("v_nom"));
+                // Date
+                String dateStr = resultatRequete.getString("v_date");
+                if (dateStr != null && !dateStr.isEmpty()) {
+                    try {
+                        // La colonne peut contenir une date au format YYYY-MM-DD
+                        v.setDateDebutVente(java.time.LocalDate.parse(dateStr.substring(0, 10)));
+                    } catch (Exception ignored) {}
+                }
                 Lieu l = new Lieu();
                 l.setId(resultatRequete.getInt("l_id"));
                 l.setVille(resultatRequete.getString("l_ville"));
@@ -71,10 +79,6 @@ public class DaoVente {
         return v;
     }
 
-    /**
-     * CORRECTION : ajout du WHERE idVente = ? qui manquait,
-     * sinon setInt(1, idVente) plantait avec une SQLException.
-     */
     public static ArrayList<Lot> getLesLots(Connection cnx, int idVente) {
         ArrayList<Lot> lesLots = new ArrayList<Lot>();
         try {
@@ -83,7 +87,7 @@ public class DaoVente {
                 "c.id as c_id, c.nom as c_nom " +
                 "FROM lot l " +
                 "INNER JOIN cheval c ON l.idCheval = c.id " +
-                "WHERE l.idVente = ?"          // ← la ligne qui manquait
+                "WHERE l.idVente = ?"
             );
             requeteSql.setInt(1, idVente);
             resultatRequete = requeteSql.executeQuery();
@@ -104,54 +108,56 @@ public class DaoVente {
         return lesLots;
     }
 
-    /**
-     * Ajoute une nouvelle vente dans la base de données.
-     * @return true si l'ajout a réussi, false sinon
-     */
     public static boolean ajouterVente(Connection cnx, Vente vente) {
-    try {
-        // On ne définit que 3 colonnes : nom, idLieu, dateDebutVente
-        requeteSql = cnx.prepareStatement(
-            "INSERT INTO vente (nom, idLieu, dateDebutVente) VALUES (?, ?, ?)",
-            PreparedStatement.RETURN_GENERATED_KEYS
-        );
-        
-        // Paramètre 1 : Nom
-        requeteSql.setString(1, vente.getNom());
-        
-        // Paramètre 2 : ID du Lieu
-        requeteSql.setInt(2, vente.getLieu().getId());
-
-        // Paramètre 3 : Date de début
-        if (vente.getDateDebutVente() != null) {
-            requeteSql.setDate(3, java.sql.Date.valueOf(vente.getDateDebutVente()));
-        } else {
-            requeteSql.setNull(3, java.sql.Types.DATE);
-        }
-
-        // EXECUTION
-        int result = requeteSql.executeUpdate();
-        
-        if (result == 1) {
-            // Récupération de l'ID auto-généré
-            ResultSet rs = requeteSql.getGeneratedKeys();
-            if (rs.next()) {
-                vente.setId(rs.getInt(1));
+        try {
+            requeteSql = cnx.prepareStatement(
+                "INSERT INTO vente (nom, idLieu, dateDebutVente) VALUES (?, ?, ?)",
+                PreparedStatement.RETURN_GENERATED_KEYS
+            );
+            requeteSql.setString(1, vente.getNom());
+            requeteSql.setInt(2, vente.getLieu().getId());
+            if (vente.getDateDebutVente() != null) {
+                requeteSql.setDate(3, java.sql.Date.valueOf(vente.getDateDebutVente()));
+            } else {
+                requeteSql.setNull(3, java.sql.Types.DATE);
             }
-            return true;
+            int result = requeteSql.executeUpdate();
+            if (result == 1) {
+                ResultSet rs = requeteSql.getGeneratedKeys();
+                if (rs.next()) vente.setId(rs.getInt(1));
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        System.out.println("Erreur lors de l'ajout de la vente : " + e.getMessage());
-        return false;
     }
-}
 
     /**
-     * Récupère tous les lieux disponibles.
+     * Modifie une vente existante.
      */
+    public static boolean modifierVente(Connection cnx, Vente vente) {
+        try {
+            requeteSql = cnx.prepareStatement(
+                "UPDATE vente SET nom=?, idLieu=?, dateDebutVente=? WHERE id=?"
+            );
+            requeteSql.setString(1, vente.getNom());
+            requeteSql.setInt(2, vente.getLieu().getId());
+            if (vente.getDateDebutVente() != null) {
+                requeteSql.setDate(3, java.sql.Date.valueOf(vente.getDateDebutVente()));
+            } else {
+                requeteSql.setNull(3, java.sql.Types.DATE);
+            }
+            requeteSql.setInt(4, vente.getId());
+            return requeteSql.executeUpdate() == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la modification de la vente : " + e.getMessage());
+            return false;
+        }
+    }
+
     public static ArrayList<Lieu> getLesLieux(Connection cnx) {
         ArrayList<Lieu> lesLieux = new ArrayList<>();
         try {
@@ -165,7 +171,6 @@ public class DaoVente {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("La requête de getLesLieux a généré une exception SQL");
         }
         return lesLieux;
     }
