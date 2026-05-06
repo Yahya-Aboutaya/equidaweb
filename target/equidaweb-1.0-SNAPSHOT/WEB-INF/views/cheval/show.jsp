@@ -20,10 +20,7 @@
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .detail-row { margin-bottom: 15px; }
-            .detail-label {
-                font-weight: bold;
-                color: #555;
-            }
+            .detail-label { font-weight: bold; color: #555; }
             .detail-value { padding-top: 7px; }
         </style>
     </head>
@@ -45,41 +42,47 @@
                                 <div class="col-sm-3 detail-label">Identifiant</div>
                                 <div class="col-sm-9 detail-value"><%= leCheval.getId() %></div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Nom</div>
                                 <div class="col-sm-9 detail-value"><%= leCheval.getNom() %></div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Code SIRE</div>
                                 <div class="col-sm-9 detail-value"><%= leCheval.getSire() != null ? leCheval.getSire() : "Non renseigné" %></div>
                             </div>
-
+                            <div class="row detail-row">
+                                <div class="col-sm-3 detail-label">Sexe</div>
+                                <div class="col-sm-9 detail-value">
+                                    <% String sexe = leCheval.getSexe();
+                                       if ("M".equals(sexe)) { %>Mâle
+                                    <% } else if ("F".equals(sexe)) { %>Femelle
+                                    <% } else { %>Non renseigné<% } %>
+                                </div>
+                            </div>
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Date de naissance</div>
                                 <div class="col-sm-9 detail-value">
                                     <%= leCheval.getDateNaissance() != null ? leCheval.getDateNaissance() : "Non renseignée" %>
                                 </div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Race</div>
                                 <div class="col-sm-9 detail-value">
                                     <%= leCheval.getRace() != null ? leCheval.getRace().getLibelle() : "Non renseignée" %>
                                 </div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Taille</div>
-                                <div class="col-sm-9 detail-value"><%= leCheval.getTaille() %> m</div>
+                                <div class="col-sm-9 detail-value">
+                                    <%= leCheval.getTaille() != 0 ? leCheval.getTaille() + " m" : "Non renseignée" %>
+                                </div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Poids</div>
-                                <div class="col-sm-9 detail-value"><%= leCheval.getPoids() %> kg</div>
+                                <div class="col-sm-9 detail-value">
+                                    <%= leCheval.getPoids() != 0 ? leCheval.getPoids() + " kg" : "Non renseigné" %>
+                                </div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Robe</div>
                                 <div class="col-sm-9 detail-value"><%= leCheval.getTypeRobe() != null ? leCheval.getTypeRobe() : "Non renseignée" %></div>
@@ -87,14 +90,12 @@
 
                             <hr>
                             <h4>Généalogie</h4>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Père</div>
                                 <div class="col-sm-9 detail-value">
                                     <%= leCheval.getPere() != null ? leCheval.getPere().getNom() : "Inconnu" %>
                                 </div>
                             </div>
-
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Mère</div>
                                 <div class="col-sm-9 detail-value">
@@ -104,15 +105,16 @@
 
                             <div class="row" style="margin-top: 30px;">
                                 <div class="col-sm-offset-3 col-sm-9">
+                                    <a href="<%= request.getContextPath() %>/cheval-servlet/edit?idCheval=<%= leCheval.getId() %>" class="btn btn-warning">
+                                        <span class="glyphicon glyphicon-pencil"></span> Modifier
+                                    </a>
                                     <a href="<%= request.getContextPath() %>/cheval-servlet/list" class="btn btn-default">
                                         <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
                                     </a>
                                 </div>
                             </div>
                         <% } else { %>
-                            <div class="alert alert-danger">
-                                Le cheval demandé n'existe pas.
-                            </div>
+                            <div class="alert alert-danger">Le cheval demandé n'existe pas.</div>
                             <a href="<%= request.getContextPath() %>/cheval-servlet/list" class="btn btn-default">
                                 <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
                             </a>

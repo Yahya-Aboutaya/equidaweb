@@ -15,9 +15,6 @@ public class DaoCourse {
     static PreparedStatement requeteSql = null;
     static ResultSet resultatRequete = null;
 
-    /**
-     * Récupère toutes les courses de la base de données.
-     */
     public static ArrayList<Course> getLesCoures(Connection cnx) {
         ArrayList<Course> lesCourses = new ArrayList<>();
         try {
@@ -31,9 +28,7 @@ public class DaoCourse {
                 c.setNom(resultatRequete.getString("nom"));
                 c.setLieu(resultatRequete.getString("lieu"));
                 String dateStr = resultatRequete.getString("date_");
-                if (dateStr != null) {
-                    c.setDate(java.time.LocalDate.parse(dateStr));
-                }
+                if (dateStr != null) c.setDate(java.time.LocalDate.parse(dateStr));
                 lesCourses.add(c);
             }
         } catch (SQLException e) {
@@ -43,13 +38,9 @@ public class DaoCourse {
         return lesCourses;
     }
 
-    /**
-     * Récupère une course par son id, avec la liste de ses participants.
-     */
     public static Course getLaCourse(Connection cnx, int idCourse) {
         Course course = null;
         try {
-            // 1. Infos de la course
             requeteSql = cnx.prepareStatement(
                 "SELECT id, nom, lieu, date_ FROM course WHERE id = ?"
             );
@@ -61,14 +52,11 @@ public class DaoCourse {
                 course.setNom(resultatRequete.getString("nom"));
                 course.setLieu(resultatRequete.getString("lieu"));
                 String dateStr = resultatRequete.getString("date_");
-                if (dateStr != null) {
-                    course.setDate(java.time.LocalDate.parse(dateStr));
-                }
+                if (dateStr != null) course.setDate(java.time.LocalDate.parse(dateStr));
             }
 
             if (course == null) return null;
 
-            // 2. Participants (cheval + position)
             requeteSql = cnx.prepareStatement(
                 "SELECT c.id as c_id, c.nom as c_nom, p.position " +
                 "FROM participer p " +
@@ -87,7 +75,6 @@ public class DaoCourse {
                 ch.setNom(resultatRequete.getString("c_nom"));
                 cc.setCheval(ch);
                 cc.setCourse(course);
-                // position peut être NULL en base → getInt retourne 0 si null
                 cc.setPosition(resultatRequete.getInt("position"));
                 participations.add(cc);
             }
@@ -99,45 +86,57 @@ public class DaoCourse {
         }
         return course;
     }
-    
-    public static boolean ajouterCourse(Connection cnx, Course course) {
-    try {
-        // On précise RETURN_GENERATED_KEYS pour récupérer l'ID après l'insertion
-        PreparedStatement requeteSql = cnx.prepareStatement(
-            "INSERT INTO course (nom, lieu, date_) VALUES (?, ?, ?)",
-            java.sql.Statement.RETURN_GENERATED_KEYS
-        );
-        
-        requeteSql.setString(1, course.getNom());
-        requeteSql.setString(2, course.getLieu());
-        
-        if (course.getDate() != null) {
-            requeteSql.setDate(3, java.sql.Date.valueOf(course.getDate()));
-        } else {
-            requeteSql.setNull(3, java.sql.Types.DATE);
-        }
 
-        int result = requeteSql.executeUpdate();
-        
-        if (result == 1) {
-            // Récupération de l'ID auto-incrémenté
-            java.sql.ResultSet rs = requeteSql.getGeneratedKeys();
-            if (rs.next()) {
-                course.setId(rs.getInt(1));
+    public static boolean ajouterCourse(Connection cnx, Course course) {
+        try {
+            PreparedStatement req = cnx.prepareStatement(
+                "INSERT INTO course (nom, lieu, date_) VALUES (?, ?, ?)",
+                java.sql.Statement.RETURN_GENERATED_KEYS
+            );
+            req.setString(1, course.getNom());
+            req.setString(2, course.getLieu());
+            if (course.getDate() != null) {
+                req.setDate(3, java.sql.Date.valueOf(course.getDate()));
+            } else {
+                req.setNull(3, java.sql.Types.DATE);
             }
-            return true;
+            int result = req.executeUpdate();
+            if (result == 1) {
+                java.sql.ResultSet rs = req.getGeneratedKeys();
+                if (rs.next()) course.setId(rs.getInt(1));
+                return true;
+            }
+            return false;
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            return false;
         }
-        return false;
-    } catch (java.sql.SQLException e) {
-        e.printStackTrace();
-        return false;
     }
-}
 
     /**
-     * Récupère les courses auxquelles un cheval a participé.
-     * Utilisé dans la fiche détail du cheval.
+     * Modifie une course existante.
      */
+    public static boolean modifierCourse(Connection cnx, Course course) {
+        try {
+            PreparedStatement req = cnx.prepareStatement(
+                "UPDATE course SET nom=?, lieu=?, date_=? WHERE id=?"
+            );
+            req.setString(1, course.getNom());
+            req.setString(2, course.getLieu());
+            if (course.getDate() != null) {
+                req.setDate(3, java.sql.Date.valueOf(course.getDate()));
+            } else {
+                req.setNull(3, java.sql.Types.DATE);
+            }
+            req.setInt(4, course.getId());
+            return req.executeUpdate() == 1;
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la modification de la course : " + e.getMessage());
+            return false;
+        }
+    }
+
     public static ArrayList<ChevalCourse> getLesCoursesDuCheval(Connection cnx, int idCheval) {
         ArrayList<ChevalCourse> lesChevalCourses = new ArrayList<>();
         try {
@@ -151,17 +150,13 @@ public class DaoCourse {
             );
             requeteSql.setInt(1, idCheval);
             resultatRequete = requeteSql.executeQuery();
-
             while (resultatRequete.next()) {
                 Course co = new Course();
                 co.setId(resultatRequete.getInt("co_id"));
                 co.setNom(resultatRequete.getString("co_nom"));
                 co.setLieu(resultatRequete.getString("co_lieu"));
                 String dateStr = resultatRequete.getString("co_date");
-                if (dateStr != null) {
-                    co.setDate(java.time.LocalDate.parse(dateStr));
-                }
-
+                if (dateStr != null) co.setDate(java.time.LocalDate.parse(dateStr));
                 ChevalCourse cc = new ChevalCourse();
                 cc.setCourse(co);
                 cc.setPosition(resultatRequete.getInt("position"));
@@ -169,7 +164,6 @@ public class DaoCourse {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur dans DaoCourse.getLesCoursesDuCheval");
         }
         return lesChevalCourses;
     }
